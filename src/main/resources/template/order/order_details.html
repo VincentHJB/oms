@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理系统</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief main-tab-container">
+    <fieldset class="layui-elem-field hotel-details-body">
+        <legend>订单详情</legend>
+        <div class="layui-field-box">
+            <form class="layui-form">
+                <table class="layui-table" lay-even="" lay-skin="nob" style="text-align: left">
+                    <colgroup>
+                        <col width="200">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>订单编号：</td>
+                            <td>${orderVo.id!''}</td>
+                        </tr>
+                        <tr>
+                            <td>商品名称：</td>
+                            <td>${orderVo.tradeName!''}</td>
+                        </tr>
+                        <tr>
+                            <td>商品数量：</td>
+                            <td>${orderVo.number!''}</td>
+                        </tr>
+                        <tr>
+                            <td>订单金额：</td>
+                            <td>${orderVo.amount!'0'}</td>
+                        </tr>
+                        <tr>
+                            <td>采购编号：</td>
+                            <td>${orderVo.poNo!''}</td>
+                        </tr>
+                        <tr>
+                            <td>客户编号：</td>
+                            <td>${orderVo.customerNo!''}</td>
+                        </tr>
+                        <tr>
+                            <td>供应商编号：</td>
+                            <td>${orderVo.vid!''}</td>
+                        </tr>
+                        <tr>
+                            <td>下单日期：</td>
+                            <td>${orderVo.startAt!''}</td>
+                        </tr>
+                        <tr>
+                            <td>交货日期：</td>
+                            <td>${orderVo.endAt!''}</td>
+                        </tr>
+                        <tr>
+                            <td>付款天数：</td>
+                            <td>${orderVo.paymentDay!''}</td>
+                        </tr>
+                        <tr>
+                            <td>保证金金额：</td>
+                            <td>${orderVo.deposit!'0'}</td>
+                        </tr>
+                        <tr>
+                                <td>订单状态：</td>
+                            <% var status = isEmpty(orderVo.status);
+                            if(status == 3){ %>
+                                <td>交易取消</td>
+                            <% }else if(status == 2){ %>
+                                <td>交易完成</td>
+                            <% }else if(status == 1){ %>
+                                <td>交易中</td>
+                            <% }else{ %>
+                                <td>今日订单</td>
+                            <% } %>
+                        </tr>
+                        <tr>
+                            <td>备注：</td>
+                            <td>${orderVo.remark!''}</td>
+                        </tr>
+                        <tr>
+                            <td>订单图片：</td>
+                            <td>
+                                <div class="layui-input-block room-add-img">
+                                    <img class="room-add-img-img" src="${orderVo.imageUrl}"/>
+                                </div>
+
+
+                                <!--<div id="itemLi_5" onclick="bigIma(5);" data-src="原图.jpg">-->
+                                    <!--<a href="#" class="a-img"><img src="${orderVo.imageUrl}"></a>-->
+                                    <!--<p class="description"></p>-->
+                                <!--</div>-->
+                                <!--<div id="itemLi_6" onclick="bigIma(6);" data-src="原图.jpg">-->
+                                    <!--<a href="#" class="a-img"><img src="${orderVo.imageUrl}"></a>-->
+                                    <!--<p class="description"></p>-->
+                                <!--</div>-->
+
+
+
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="layui-form-item">
+                    <a style="float: right;" class="layui-btn" target="_blank" href="/order/print?orderId=${orderVo.id}" >打印订单??</a>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+
+</body>
+</html>

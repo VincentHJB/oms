@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理系统-用户列表</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="site-content">
+    <fieldset class="layui-elem-field">
+        <legend>用户列表</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <a href="/user/toAdd" class="layui-btn layui-btn-big right-btn">添加用户</a>
+                </div>
+            </div>
+
+            <!--分页-->
+            <div class="layui-tab-item layui-show">
+                <form id="main-data" class="layui-form">
+                </form>
+                <div id="pageData" style="float: right;"></div>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+
+<!--删除用户-->
+<script>
+    function toDelete(id) {
+        console.log(id);
+        ///////layui 弹窗
+        layui.use('layer', function () {
+            var result;
+            layer = layui.layer;
+            layer.confirm('是否删除该用户所有数据？',
+                {
+                    icon: 3,
+                    title:'删除用户提示',
+                    skin: 'layui-layer-molv',
+                    shadeClose:true
+                }, function (index) {
+                    //刪除用户数据
+                    $.post("/user/delete", {userId: id}, function (msg) {
+                        result = msg;
+                        location.reload();
+                    });
+                    layer.msg("已删除该用户所有数据！", {
+                        icon: 1,
+                        time: 5000
+                    });
+                    layer.close(index);
+                    //
+                });
+        })
+    }
+</script>
+
+<!--用户数据表-->
+<script>
+    layui.use(['layer', 'form','laypage','laydate'], function () {
+        var layer = layui.layer, form = layui.form(),laypage = layui.laypage,
+            laydate = layui.laydate, $ = layui.jquery;
+        var resultCurr;
+
+        ////////////////////////////////////////////////////////////////////////////
+
+        //处理请求结果
+        function dealData(json) {
+            var data = json.vo;
+            var html = '';
+            html += '<table class="layui-table">';
+            html += '<colgroup>' +
+                        '<col width="200">' + //id
+                        '<col width="270">' + //用户名
+                        '<col width="300">' + //密码
+                        '<col width="220">' + //手机
+                        '<col width="310">' + //操作
+                        '<col width="220">' + //开关
+                    '</colgroup>';
+
+            html += '<thead><tr><th>ID</th><th>用户名</th><th>密码</th><th>手机号码</th><th>操作</th><th>用户状态</th></tr></thead>';
+            html += '<tbody>';
+
+            for (var i = 0; i < data.length; i++) {
+                var _k = data[i];
+                html += '<tr>';
+                html += '<td>' + _k.id + '</td>';
+                html += '<td>' + _k.username + '</td>';
+                html += '<td>' + _k.password + '</td>';
+                html += '<td>' + _k.phone + '</td>';
+                html += '<td>';
+                html += '<a href="/user/toUserInfo?id=' + _k.id + '" class="layui-btn">修改</a> '
+                html += '<a onclick=toDelete(' + _k.id + ') class="layui-btn layui-btn-danger">删除</a>';
+                html += '</td><td>';
+                if (1 == _k.status) {
+                    html += '<input type="checkbox" name="userId" value="' + _k.id +
+                        '" lay-skin="switch" lay-filter="switchTest" title="开关" lay-text="ON|OFF" checked>';
+
+                } else {
+                    html += '<input type="checkbox" name="userId" value="' + _k.id +
+                        '" lay-skin="switch" lay-filter="switchTest" title="开关" lay-text="ON|OFF">';
+                }
+                html += '</td>';
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            $('#main-data').html(html);
+
+            //调用分页
+            laypage({
+                cont: 'pageData'
+                , pages: json.total_page //得到总页数
+                , curr: resultCurr
+                , jump: function (obj, first) {
+                    if (!first) {
+                        render(obj.curr);
+                    }
+                }
+            });
+
+            //监听指定开关(用户状态)
+            form.on('switch(switchTest)', function (data) {
+                console.log(data.elem); //得到checkbox原始DOM对象
+                console.log(); //是否被选中，true或者false
+                console.log(); //复选框value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象
+                var userId = data.value;
+                var result = data.elem.checked;
+                var status;
+                if (data.elem.checked)
+                    status = 1;
+                else
+                    status = 0;
+                $.post(
+                    "/user/status?",
+                    {userId: userId, status: status},
+                    function (json) {
+                        if ("success" == json && status == 1) {
+                            layer.tips('修改成功，该用户处于未锁定状态', data.othis)
+                        } else if ("success" == json && status == 0) {
+                            layer.tips('修改成功，该用户处于锁定状态', data.othis)
+                        } else {
+                            layer.tips('操作失败', data.othis)
+                        }
+                        form.render(); //更新全部
+                    }
+                );
+            });
+            form.render(); //更新全部
+
+        };
+
+        //发起请求
+        function render(curr) {
+            $.getJSON("/user/page/all",
+                {
+                    page_no: curr || 1,
+                    page_size : 8
+                },
+                function (json) {
+                    resultCurr = curr || 1;
+                    dealData(json);
+                }
+            );
+        };
+        render();
+
+        //监听提交
+        form.on('submit(search_form_btn)', function (data) {
+            render();
+            return false;
+        });
+
+        //reset按钮
+        $('#reset').on('click',function () {
+            $('#search_form')[0].reset();
+            return false;
+        })
+
+        //////////////////////////////////////////////////////////////
+
+    })
+</script>
+</body>
+</html>

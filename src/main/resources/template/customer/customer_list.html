@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理系统-客户列表</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="site-content">
+    <fieldset class="layui-elem-field">
+        <legend>客户列表</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <a href="/user/toAddCustomer" class="layui-btn layui-btn-big right-btn">添加客户</a>
+                </div>
+            </div>
+
+            <!--分页-->
+            <div class="layui-tab-item layui-show">
+                <form id="main-data" class="layui-form">
+                </form>
+                <div id="pageData" style="float: right;"></div>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+
+<!--删除用户-->
+<script>
+    function toDelete(id) {
+        console.log(id);
+        ///////layui 弹窗
+        layui.use('layer', function () {
+            var result;
+            layer = layui.layer;
+            layer.confirm('是否删除该客户所有数据？',
+                {
+                    icon: 3,
+                    title:'删除客户提示',
+                    skin: 'layui-layer-molv',
+                    shadeClose:true
+                }, function (index) {
+                    //刪除客户数据
+                    $.post("/customer/delete", {customerId: id}, function (msg) {
+                        result = msg;
+                        location.reload();
+                    });
+                    layer.msg("已删除该客户所有数据！", {
+                        icon: 1,
+                        time: 5000
+                    });
+                    layer.close(index);
+                    //
+                });
+        })
+    }
+</script>
+
+<!--用户数据表-->
+<script>
+    layui.use(['layer', 'form','laypage','laydate'], function () {
+        var layer = layui.layer, form = layui.form(),laypage = layui.laypage,
+            laydate = layui.laydate, $ = layui.jquery;
+        var resultCurr;
+
+        ////////////////////////////////////////////////////////////////////////////
+
+        //处理请求结果
+        function dealData(json) {
+            var data = json.vo;
+            var html = '';
+            html += '<table class="layui-table">';
+            html += '<colgroup>' +
+                        '<col width="200">' + //id
+                        '<col width="220">' + //客户编号
+                        '<col width="270">' + //客户名
+                        '<col width="300">' + //手机
+                        '<col width="220">' + //国籍
+                        '<col width="310">' + //操作
+                    '</colgroup>';
+
+            html += '<thead><tr>' +
+                        '<th>ID</th>' +
+                        '<th>客户编号</th>' +
+                        '<th>客户名称</th>' +
+                        '<th>手机号码</th>' +
+                        '<th>国籍</th>' +
+                        '<th>操作</th>' +
+                    '</tr></thead>';
+            html += '<tbody>';
+
+            for (var i = 0; i < data.length; i++) {
+                var _k = data[i];
+                html += '<tr>';
+                html += '<td>' + _k.id + '</td>';
+                html += '<td>' + _k.customerNo + '</td>';
+                html += '<td>' + _k.name + '</td>';
+                html += '<td>' + _k.phone + '</td>';
+                html += '<td>' + _k.nationality + '</td>';
+                html += '<td>';
+                html += '<a href="/customer/toModifyCustomer?id=' + _k.id + '" class="layui-btn">修改</a> '
+                html += '<a onclick=toDelete(' + _k.id + ') class="layui-btn layui-btn-danger">删除</a>';
+                html += '</td></tr>';
+            }
+            html += '</tbody></table>';
+            $('#main-data').html(html);
+
+            //调用分页
+            laypage({
+                cont: 'pageData'
+                , pages: json.total_page //得到总页数
+                , curr: resultCurr
+                , jump: function (obj, first) {
+                    if (!first) {
+                        render(obj.curr);
+                    }
+                }
+            });
+        };
+
+        //发起请求
+        function render(curr) {
+            $.getJSON("/customer/page/all",
+                {
+                    page_no: curr || 1,
+                    page_size : 8
+                },
+                function (json) {
+                    resultCurr = curr || 1;
+                    dealData(json);
+                }
+            );
+        };
+        render();
+
+        //监听提交
+        form.on('submit(search_form_btn)', function (data) {
+            render();
+            return false;
+        });
+
+        //reset按钮
+        $('#reset').on('click',function () {
+            $('#search_form')[0].reset();
+            return false;
+        })
+
+        //////////////////////////////////////////////////////////////
+
+    })
+</script>
+</body>
+</html>

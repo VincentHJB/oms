@@ -1,0 +1,96 @@
+
+ul.layui-nav-tree .layui-nav-child dd a {
+    padding-left: 65px;
+}
+
+.layui-table {
+    text-align: center;
+}
+
+.layui-table th {
+    text-align: center;
+}
+
+.today-order-title th {
+    background-color: #C6E2FF;
+    /*background-color: rgba(0, 150, 136, 0.14);*/
+}
+
+.hotel-details-body {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.hotel-photos {
+    margin: 10px 0;
+}
+
+.hotel-photos img.banner_pic{
+    width: 160px;
+    height: 100px;
+    margin-left: 8px;
+}
+
+.hotel-qr img.qr_pic{
+    width: 270px;
+    height: 270px;
+
+}
+
+.hotel-photos a{
+    margin-left: 8px;
+    margin-top: 25px;
+}
+
+.room-add-img-img{
+    width: 160px;
+    height: 100px;
+}
+.right-btn{
+    float: right;
+}
+.btn-center-long{
+    width: 150px;
+    margin-left: 45%;
+
+}
+
+.main-tab-title{
+    margin: 10px;
+}
+.form-center{
+    width: 600px;
+    height: 200px;
+    /* margin: 20% auto; */
+    /* border: 1px solid; */
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.warn-color{
+    color: #009688;
+
+}
+
+.left-container{
+    width: 60%;
+    height: auto;
+    float: left;
+}
+.right-container{
+    width: 30%;
+    height: auto;
+    float: left;
+}
+.forbid-td input{
+    background-color: #e2e2e2;
+}
+
+.warm-color{
+    border-left: 5px solid #FF5722;
+    color: #FF5722;
+}

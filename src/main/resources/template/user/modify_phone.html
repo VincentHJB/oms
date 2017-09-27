@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理系统-修改手机号码</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief main-tab-container form-center">
+    <form id="modify_form" class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">原手机号</label>
+            <div class="layui-input-inline"><!--${user.phone!''}-->
+                <input  type="text" name="phone" id="phone" value="" lay-verify="phone" autocomplete="off" placeholder="请输入原手机号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新手机号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="new_mobile"  id="new_mobile" lay-verify="new_mobile"  placeholder="请输入新手机号" autocomplete="off" class="layui-input">
+            </div>
+            <!--<button class="layui-btn" lay-submit="" lay-filter="send_auth" style="width: 180px">发送验证码</button>-->
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="modify_form" style="width: 190px">提交修改</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function(){
+        layui.use(['layer','form'],function(){
+            var layer = layui.layer,form = layui.form();
+            //自定义验证规则
+            form.verify({
+                phone: function(value){
+                    if(value.length < 1){
+                        return '原手机号不能为空！';
+                    }
+                },
+                phone: function(value){
+                    if(value.length < 11){
+                        return '原手机号少于11位！';
+                    }
+                },
+                new_mobile: function(value){
+                    if(value.length < 1){
+                        return '新手机号不能为空！';
+                    }
+                },
+                new_mobile: function(value){
+                    if(value.length < 11){
+                        return '原手机号不能少于11位！';
+                    }
+                },
+            });
+//            form.on('submit(send_auth)', function(data){
+//                var phone = $("#phone").val();
+//                $.post('/hotel/user/send/authCode',{phone:phone},function(result){
+//                    if(result.success){
+//                        layer.msg("验证码发送成功！")
+//                    }else{
+//                        layer.msg("验证码发送失败！");
+//                    }
+//                });
+//                return false;
+//            });
+
+            //监听提交
+            form.on('submit(modify_form)', function(data){
+                var phone = $("#phone").val();
+                var new_mobile = $("#new_mobile").val();
+                $.post('/user/edit',{phone:phone,new_mobile:new_mobile},function(json){
+                    if(json.success){
+                        layer.msg("手机号已成功修改！")
+                    }else{
+                        layer.msg("操作失败！")
+                    }
+                    $("input").val("");
+                });
+                return false;
+            });
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>&nbsp</title>
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+    <link rel="icon" href="/img/train.png" type="image/x-icon"/>
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/layui/layui.js"></script>
+
+
+    <style type="text/css">
+        .main_data {
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+<div style="margin: 0 auto;width: 900px">
+    <div style="height: 30px"></div>
+    <div id="title" style="width: 900px"><h1 align="center">${printVo.hotelName}打印单</h1></div>
+    <table>
+        <tr>
+            <td width="20px"></td>
+            <td>订单号:</td>
+            <td>${printVo.orderNo}</td>
+        </tr>
+    </table>
+    <div id="print_area" style="width: 900px ;height: auto;">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+
+            <tbody>
+            <tr class="main_data">
+                <td>客人姓名</td>
+                <td>${printVo.customName}</td>
+                <td>房间类型</td>
+                <td>${printVo.roomType}</td>
+                <td>房价</td>
+                <td>${printVo.roomPrice}</td>
+            </tr>
+            <tr class="main_data">
+                <td>付款方式</td>
+                <td>人民币</td>
+                <td>数量</td>
+                <td colspan="3">${printVo.quantity}</td>
+            </tr>
+            <tr class="main_data">
+                <td>金额</td>
+                <td>${printVo.acutalFee}</td>
+                <td>入住时间</td>
+                <td colspan="3">${printVo.arriveTime}</td>
+            </tr>
+            <tr class="main_data">
+                <td>票据号</td>
+                <td></td>
+                <td>预离时间</td>
+                <td colspan="3">${printVo.leaveTime}</td>
+            </tr>
+            <tr class="main_data">
+                <td>备注</td>
+                <td colspan="5">${printVo.customerRemark}</td>
+            </tr>
+            </tbody>
+            </colgroup>
+        </table>
+
+        <table class="layui-table" lay-even lay-skin="nob">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            <tbody>
+            <tr class="main_data">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">前台电话： ${printVo.hotelPhone}</td>
+                <td colspan="2">操作员：总经理</td>
+            </tr>
+            <tr>
+                <td colspan="3">地址： ${printVo.address}</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <% var date = date(); %>
+                <td colspan="3">打印时间： ${date,dateFormat="yyyy-MM-dd hh:mm:ss"}</td>
+                <td colspan="2">客人签名：</td>
+            </tr>
+            <tr>
+                <td colspan="5">客人联系方式：${printVo.mobile}</td>
+            </tr>
+            <tr>
+                <td colspan="5">备注：</td>
+            </tr>
+            </tbody>
+            </colgroup>
+        </table>
+
+    </div>
+
+
+    <div class="print_class" style="float: right;">
+
+        <button id="print" class="layui-btn layui-btn-radius">立即打印</button>
+    </div>
+
+
+</div>
+
+
+<script>
+    $(function () {
+        $('#print').on('click', function () {
+            $('.print_class').hide();
+            window.print();
+            $('.print_class').show();
+        })
+    })
+</script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var $ = layui.jquery;
+        var form = layui.form();
+        var layer = layui.layer;
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理系统</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+<!--<blockquote class="layui-elem-quote layui-text">-->
+    <!--注意：请先添加订单图片，再补充订单信息。-->
+<!--</blockquote>-->
+<div class="layui-tab layui-tab-brief main-tab-container">
+    <fieldset class="layui-elem-field hotel-details-body">
+        <legend>修改订单</legend>
+        <div class="layui-field-box center">
+            <form class="layui-form">
+            <!--<form class="layui-form layui-form-pane" action="">-->
+                <input type="hidden" name="id" id="id" lay-verify="id" value="${orderVo.id}"/>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品名称：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="tradeName" id="tradeName" lay-verify="tradeName" value="${orderVo.tradeName}"
+                                   autocomplete="off" placeholder="请输入商品名称" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品数量：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="number" id="number" lay-verify="number" value="${orderVo.number}"
+                                   autocomplete="off" placeholder="请输入商品数量" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">订单金额：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="amount" id="amount" lay-verify="amount" value="${orderVo.amount}"
+                                   autocomplete="off" placeholder="请输入订单金额" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">采购编号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="poNo" id="poNo" lay-verify="poNo" value="${orderVo.poNo}"
+                                   autocomplete="off" placeholder="请输入采购编号" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">客户编号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="customerNo" id="customerNo" lay-verify="customerNo" value="${orderVo.customerNo}"
+                                   autocomplete="off" placeholder="请输入客户编号" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">供应商编号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="vid" id="vid" lay-verify="vid" value="${orderVo.vid}"
+                                   autocomplete="off" placeholder="请输入供应商编号" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">下单时间：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="startAt" id="startAt" lay-verify="startAt" autocomplete="off" placeholder="yyyy-mm-dd"
+                                   value="${orderVo.startAt}" class="layui-input" onclick="layui.laydate({elem: this})">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">交货时间：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="endAt" id="endAt" lay-verify="endAt" placeholder="yyyy-mm-dd" autocomplete="off"
+                                   value="${orderVo.endAt}" class="layui-input" onclick="layui.laydate({elem: this})">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">保证金金额：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="deposit" id="deposit" lay-verify="deposit" value="${orderVo.deposit}"
+                                   autocomplete="off" placeholder="请输入保证金金额" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">付款天数：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="paymentDay" id="paymentDay" lay-verify="paymentDay" value="${orderVo.paymentDay}"
+                                   autocomplete="off" placeholder="请输入付款天数" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">订单状态：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="status" id="status" lay-verify="status" value="${orderVo.status}"
+                                   autocomplete="off" placeholder="请输入订单状态" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">1:交易中，2：交易完成，3：交易取消</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">订单图片：</label>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="photos" >
+                            <div >
+
+                                <%var k = isEmpty(orderVo.imageUrl);
+                                if(!k){%>
+                                    <div class="layui-input-block room-add-im">
+                                        <img class="room-add-img-img" src="${orderVo.imageUrl}"/>
+
+                                        <a id="add-banner" data-method="offset" data-type="auto" class="layui-btn">
+                                            <i class="layui-icon">&#xe61f;</i> 添加图片
+                                        </a>
+                                    </div>
+                                <%}else{%>
+                                    <div class="layui-input-block room-add-img">
+                                        <!--<i class="layui-icon" style="font-size: 30px;color: #1E9FFF;">&#xe61f;</i>-->
+                                        <a id="add-banner" data-method="offset" data-type="auto" class="layui-btn">
+                                            <i class="layui-icon">&#xe61f;</i> 添加图片
+                                        </a>
+                                    </div>
+                                <%}%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">订单备注：</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入订单备注内容" class="layui-textarea" name="remark" id="remark" lay-verify="remark">${orderVo.remark}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="modify_form" style="width: 190px">立即提交
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+<script>
+    layui.use(['layer', 'form', 'laydate'], function () {
+        var $ = layui.jquery, layer = layui.layer, form = layui.form(), laydate = layui.laydate;
+        //触发事件
+        var active = {
+            offset: function (othis) {
+                var type = othis.data('type'),
+                    text = othis.text();
+                var total = 1;
+                $.post('/order/toAddPic', {total: total}, function (str) {
+                    layer.open({
+                        title: "添加图片",
+                        type: 1,
+                        skin: "layui-layer-molv",
+                        offset: ['200px', '30%'],
+                        content: str,
+                        //只有当点击confirm框的确定时，该层才会关闭
+                        cancel: function (index, layero) {
+                            location.reload();
+                        }
+                    });
+                });
+            }
+        };
+
+        $('#add-banner').on('click', function () {
+            var total_pic = 1;
+            if (total_pic >= 5) {
+                layer.msg("最多只能上传5张图片", {
+                    icon: 5,
+                    time: 1000
+                })
+            } else {
+
+                var othis = $(this),
+                    method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            }
+
+        });
+
+        //自定义验证规则
+        form.verify({
+            tradeName: function (value) {
+                if (value.length < 1) {
+                    return '商品名称不能为空';
+                }
+            },
+            customerNo: function (value) {
+                if (value.length < 1) {
+                    return '客户编号不能为空';
+                }
+            },
+            poNo: function (value) {
+                if (value.length < 1) {
+                    return '采购编号不能为空';
+                }
+            },
+            vid: function (value) {
+                if (value.length < 1) {
+                    return '供应商编号不能为空';
+                }
+            },
+            startAt: function (value) {
+                if (value.length < 1) {
+                    return '订货日期不能为空';
+                }
+            },
+            endAt: function (value) {
+                if (value.length < 1) {
+                    return '交货日期不能为空';
+                }
+            },
+            status: function (value) {
+                if (value.length < 1) {
+                    return '订单状态不能为空';
+                }
+            },
+            remark: function (value) {
+                if (value.length < 1) {
+                    return '订单备注不能为空';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(modify_form)', function(data){
+            var id = $('#id').val(),
+                tradeName = $('#tradeName').val(),
+                number = $('#number').val(),
+                amount = $('#amount').val(),
+                poNo = $('#poNo').val(),
+                customerNo = $('#customerNo').val(),
+                vid = $('#vid').val(),
+                startAt = $('#startAt').val(),
+                endAt = $('#endAt').val(),
+                status = $('#status').val(),
+                paymentDay = $('#paymentDay').val(),
+                remark = $('#remark').val(),
+                deposit = $('#deposit').val();
+            if ("" != startAt || ""!= endAt ){
+                if ("" == startAt) {
+                    layer.tips('下单时间不能为空！', '#startAt');
+                    return false;
+                }
+                if ("" == endAt) {
+                    layer.tips('交货时间不能为空！', '#endAt');
+                    return false;
+                }
+                if (endAt < startAt){
+                    layer.tips('交货时间不能小于下单时间！', '#endAt');
+                    return false;
+                }
+            }
+
+            $.post('/order/save',{
+                id:id,
+                tradeName:tradeName,
+                number:number,
+                amount:amount,
+                poNo:poNo,
+                customerNo:customerNo,
+                vid:vid,
+                startAt:startAt,
+                endAt:endAt,
+                status:status,
+                paymentDay:paymentDay,
+                remark:remark,
+                deposit:deposit
+            },function (result) {
+                if(result){
+                    layer.msg("订单保存成功！", {
+                        icon: 1,
+                        time: 1000
+                    },function () {
+                        window.location.href="/order/toAll";
+                    })
+                }//else{
+//                    layer.msg("订单添加失败！")
+//                }
+                //$("input").val("");
+            })
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
+

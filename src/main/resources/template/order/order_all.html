@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>所有订单-酒店商家端</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief main-tab-container">
+    <div class="layui-tab-content">
+
+
+        <div class="layui-tab-item layui-show">
+            <fieldset class="layui-elem-field">
+                <legend>按条件搜索</legend>
+
+            <form id="search_form" class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">下单日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="startAt" id="startAt" lay-verify="startAt" autocomplete="off" placeholder="yyyy-mm-dd"
+                                   class="layui-input" onclick="layui.laydate({elem: this})">
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="width: 300px">
+                        <label class="layui-form-label">交货日期</label>
+                        <div class="layui-input-block" style="width: 158px;">
+                            <input type="text" name="endAt" id="endAt" lay-verify="endAt" placeholder="yyyy-mm-dd" autocomplete="off"
+                                   class="layui-input" onclick="layui.laydate({elem: this})">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">订单编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="orderId" id="orderId" lay-verify="orderId" autocomplete="off"
+                                   placeholder="请输入订单编号" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="tradeName" id="tradeName" lay-verify="tradeName" autocomplete="off"
+                                   placeholder="请输入商品名称" class="layui-input">
+                        </div>
+                    </div>
+
+                    <button class="layui-btn" lay-submit="" lay-filter="search_form_btn">搜索</button>
+                    <button class="layui-btn" id="reset">清空</button>
+                </div>
+            </form>
+            </fieldset>
+            <div class="layui-tab-item layui-show">
+                <form id="main-data" class="layui-form">
+                </form>
+                <div id="pageData" style="float: right;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--删除订单-->
+<script>
+
+    function toDelete(id) {
+        console.log(id);
+        ///////layui 弹窗
+        layui.use('layer', function () {
+            var result;
+            layer = layui.layer;
+            layer.confirm('是否删除该订单？',
+                {
+                    icon: 3,
+                    title:'删除订单提示',
+                    skin: 'layui-layer-molv',
+                    shadeClose:true
+                }, function (index) {
+                    //刪除订单
+                    $.post("/order/delete", {orderId: id}, function (msg) {
+                        result = msg;
+                        location.reload();
+                    });
+                    layer.msg("已删除该订单所有数据！", {
+                        icon: 1,
+                        time: 5000
+                    });
+                    layer.close(index);
+                    //
+                });
+        })
+    }
+</script>
+
+<script>
+    layui.use(['layer', 'form','laypage','laydate'], function () {
+        var layer = layui.layer, form = layui.form(),laypage = layui.laypage,
+            laydate = layui.laydate, $ = layui.jquery;
+        var resultCurr;
+
+        ////////////////////////////////////////////////////////////////////////////
+
+        //处理请求结果
+        function dealData(json) {
+            var data = json.vo;
+            var html = '';
+            html += '<table class="layui-table">';
+            html += '<colgroup>' +
+                '<col width="180">' +
+                '<col width="270">' +
+                '<col width="150">' +
+                '<col width="160">' +
+                '<col width="170">' +
+                '<col width="150">' +
+                '<col width="120">' +
+                '<col width="320">' +
+                '</colgroup>';
+
+            html += '<thead><tr><th>订单编号</th><th>商品名称</th><th>订单金额</th><th>采购编号</th><th>客户编号</th><th>供应商编号</th><th>订单状态</th><th>操作</th></tr></thead>';
+            html += '<tbody>';
+
+            for (var i = 0; i < data.length; i++) {
+                var _k = data[i];
+                html += '<tr>';
+                html += '<td>' + _k.id + '</td>';
+                html += '<td>' + _k.tradeName + '</td>';
+                html += '<td>' + _k.amount + '</td>';
+                html += '<td>' + _k.poNo + '</td>';
+                html += '<td>' + _k.customerNo + '</td>';
+                html += '<td>' + _k.vid + '</td>';
+
+                //0：初始化，1:订单进行中，2：已完成，3：已取消
+                if (3 == _k.status) {
+                    html += '<td>' + "交易取消" + '</td>';
+                }else if(2 == _k.status){
+                    html += '<td>' + "交易完成" + '</td>';
+                }else if(1 == _k.status){
+                    html += '<td>' + "交易中" + '</td>';
+                }else{
+                    html += '<td>' + "今日订单" + '</td>';
+                }
+
+                html += '<td>';
+                html += '<a href="/order/toDetails?orderId=' + _k.id + '" class="layui-btn layui-btn-normal">详情</a> '
+                html += '<a href="/order/toOrderInfo?orderId=' + _k.id + '" class="layui-btn">修改</a> '
+                html += '<a onclick=toDelete(' + _k.id + ') class="layui-btn layui-btn-danger">删除</a>';
+                html += '</td>';
+
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            $('#main-data').html(html);
+
+            //调用分页
+            laypage({
+                cont: 'pageData'
+                , pages: json.total_page //得到总页数
+                , curr: resultCurr
+                , jump: function (obj, first) {
+                    if (!first) {
+                        render(obj.curr);
+                    }
+                }
+            });
+            form.render(); //更新全部
+
+        };
+
+        //发起分页请求
+//        function render(curr) {
+//            $.getJSON("/order/page/all",
+//                {
+//                    page_no: curr || 1,
+//                    page_size : 6
+//                },
+//                function (json) {
+//                    resultCurr = curr || 1;
+//                    dealData(json);
+//                }
+//            );
+//        };
+        //render();
+
+        //发起请求
+        function render(curr) {
+            var startAt = $("#startAt").val();
+            var endAt = $("#endAt").val();
+            var orderId = $("#orderId").val();
+            var tradeName = $("#tradeName").val();
+//            if ("" == tradeName) {
+//                layer.tips('商品名称不能为空！', '#tradeName');
+//                return false;
+//            }
+            if ("" != startAt || ""!= endAt ){
+                if ("" == startAt) {
+                    layer.tips('如果使用时间段搜索，下单日期不能为空！', '#startAt');
+                    return false;
+                }
+                if ("" == endAt) {
+                    layer.tips('如果使用时间段搜索，交货日期不能为空！', '#endAt');
+                    return false;
+                }
+                if (endAt < startAt){
+                    layer.tips('交货日期不能小于下单日期！', '#endAt');
+                    return false;
+                }
+            }
+
+            $.getJSON("/order/search",
+                {
+                    page_no: curr || 1,
+                    page_size : 6,
+                    startAt: startAt,
+                    endAt: endAt,
+                    orderId: orderId,
+                    tradeName: tradeName
+                },
+                function (json) {
+                    resultCurr = curr || 1;
+                    dealData(json);
+                });
+        };
+        render();
+        //监听提交
+        form.on('submit(search_form_btn)', function (data) {
+            render();
+            return false;
+        });
+
+        //reset按钮
+        $('#reset').on('click',function () {
+            $('#search_form')[0].reset();
+            return false;
+        })
+
+    })
+</script>
+</body>

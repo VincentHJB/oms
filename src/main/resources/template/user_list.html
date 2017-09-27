@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>客户信息-酒店商家端</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/hotel.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief main-tab-container">
+    <ul class="layui-tab-title main-tab-title">
+
+        <a href="/hotel/user/list?type=0">
+            <%if(0 == type){%>
+                <li class="layui-this">线上客户</li>
+            <%}else{%>
+            <li>线上客户</li>
+            <%}%>
+        </a>
+        <a href="/hotel/user/list?type=1">
+            <%if(1 == type){%>
+            <li class="layui-this">扫码客户</li>
+            <%}else{%>
+            <li>扫码客户</li>
+            <%}%>
+        </a>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form">
+                <table class="layui-table">
+                </table>
+                <div class="layui-form-item">
+                    <div id="pageData" style="float: right;"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    //订单详情
+    function consumeRecord(phone,type) {
+        layui.use(['layer', 'form'], function () {
+            layer.open({
+                type: 2,
+                title: '消费记录 ['+phone+']',
+                skin: "layui-layer-molv",
+                shadeClose: true,
+                shade: 0.3,
+                area: ['900px', '700px'],
+                maxmin: false, //开启最大化最小化按钮
+                content: ['/hotel/order/my/consume?phone='+ phone +'&type='+type, 'no'], //iframe的url，no代表不显示滚动条
+            });
+        })
+
+    }
+
+    $(function () {
+        var type = ${type};
+        function render(curr) {
+            $.getJSON("/hotel/user/listData", {type: type, page_no: curr || 1,page_size: 2}, function (json) {
+                var data = json.content.main_data;
+                var html = '<colgroup><col><col><col></colgroup>';
+                html += '<thead><tr><th>用户名</th><th>联系方式</th><th>操作</tr></thead>';
+                for (var i = 0; i < data.length; i++) {
+                    var _k = data[i];
+                    html += '<tr>';
+                    html += '<td>' + _k.name + '</td>';
+                    html += '<td>' + _k.phone + '</td>';
+                    html += '<td>';
+                    html += '<a onclick=consumeRecord(\"' + _k.phone + '\",' + type + ') class="layui-btn">消费记录</a>';
+                    /*html += '<a onclick=details(\"' + _k.phone + '\",' + type + ') class="layui-btn">详情</a>';*/
+                    html += '</td>';
+                    html += '</tr>';
+                }
+                html += '</tbody>';
+                $('.layui-table').html(html);
+                layui.use(['laypage', 'layer'], function () {
+                    var laypage = layui.laypage, layer = layui.layer;
+                    var $ = layui.jquery;
+                    //调用分页
+                    laypage({
+                        cont: 'pageData'
+                        , pages: json.content.total_page //得到总页数
+                        , curr: curr || 1
+                        , jump: function (obj, first) {
+                            if (!first) {
+                                render(obj.curr);
+                            }
+                        }
+                    });
+                });
+
+            });
+        };
+        render();
+    })
+</script>
+
+</body>
+</html>
