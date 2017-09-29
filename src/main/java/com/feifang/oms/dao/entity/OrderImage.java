@@ -11,20 +11,20 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "order_image")
 public class OrderImage extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private Integer id;
     private Integer uid;//用户id
     private Integer oid;//订单ID
     private String imageUrl;//图片地址
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     public Integer getUid() {
         return uid;

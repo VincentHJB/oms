@@ -1,10 +1,7 @@
 package com.feifang.oms.dao.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +18,10 @@ public abstract  class BaseEntity implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 75955796629306167L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
 	//创建时间
     @Column(name="created_at",insertable = true, updatable = false)
@@ -55,5 +56,13 @@ public abstract  class BaseEntity implements Serializable{
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

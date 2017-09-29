@@ -12,9 +12,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "common_attach_img")
 public class CommonAttachImg extends BaseEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
 
     private String fileName;//文件名
     private String realPath;//机器真实目录
@@ -25,14 +22,6 @@ public class CommonAttachImg extends BaseEntity implements Serializable {
     private Integer orderId;//订单ID
     private String postfix;
     private Long size;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFileName() {
         return fileName;

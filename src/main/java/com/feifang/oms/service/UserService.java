@@ -39,6 +39,7 @@ public class UserService {
             user.setUsername(username);
             user.setPassword(MD5Util.md5(password));
             user.setPhone(phone);
+            user.setStatus(1);
             userRep.save(user);
             resultData.setSuccess(true);
         }else {

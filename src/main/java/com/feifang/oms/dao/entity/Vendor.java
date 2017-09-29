@@ -10,9 +10,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "vendors")
 public class Vendor extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private Integer id;
 
     private String name;                //供应商姓名
     private String phone;               //手机
@@ -37,13 +37,13 @@ public class Vendor extends BaseEntity {
         this.bankName = bankName;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     public String getName() {
         return name;

@@ -12,10 +12,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "customer")
 public class Customer extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;//本系统客户id(自动生成)
-
     @NotNull
     private String name;//客户名称
     private String nationality;//国籍
@@ -43,14 +39,6 @@ public class Customer extends BaseEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

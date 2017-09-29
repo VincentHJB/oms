@@ -13,17 +13,9 @@ import java.util.Date;
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
 
     private String tradeName;               //商品名称
     private Integer number;                 //数量
-    //private Double price;//商品单价
-    //private String itemNo;//商品型号
-    //@Column(length = 10)
-    //private String color;//商品颜色
-    //private String size;//尺寸
     private Double amount;                  //金额（订单总价）
     private Integer poNo;                   //采购单号（手动输入，唯一）
     private String imageUrl;                //图片路径
@@ -36,29 +28,28 @@ public class Order extends BaseEntity {
     private Integer paymentDay;             //付款天数
     private Double deposit;                 //保证金
     private Integer status;                 //0：初始化，1:订单进行中，2：已完成，3：已取消
-    //private Integer isDelete;               //是否删除 0:正常，1：删除
 
-    public Order() {
-    }
-
-    public Order(String tradeName, Integer number, Double amount, Integer poNo, String imageUrl, String remark,
-                 String customerNo, Integer vid, Integer uid, Date startAt, Date endAt, Integer paymentDay,
-                 Double deposit, Integer status) {
-        this.tradeName = tradeName;
-        this.number = number;
-        this.amount = amount;
-        this.poNo = poNo;
-        this.imageUrl = imageUrl;
-        this.remark = remark;
-        this.customerNo = customerNo;
-        this.vid = vid;
-        this.uid = uid;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.paymentDay = paymentDay;
-        this.deposit = deposit;
-        this.status = status;
-    }
+//    public Order() {
+//    }
+//
+//    public Order(String tradeName, Integer number, Double amount, Integer poNo, String imageUrl, String remark,
+//                 String customerNo, Integer vid, Integer uid, Date startAt, Date endAt, Integer paymentDay,
+//                 Double deposit, Integer status) {
+//        this.tradeName = tradeName;
+//        this.number = number;
+//        this.amount = amount;
+//        this.poNo = poNo;
+//        this.imageUrl = imageUrl;
+//        this.remark = remark;
+//        this.customerNo = customerNo;
+//        this.vid = vid;
+//        this.uid = uid;
+//        this.startAt = startAt;
+//        this.endAt = endAt;
+//        this.paymentDay = paymentDay;
+//        this.deposit = deposit;
+//        this.status = status;
+//    }
 
 
     public Double getDeposit() {
@@ -75,14 +66,6 @@ public class Order extends BaseEntity {
 
     public void setUid(Integer uid) {
         this.uid = uid;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getCustomerNo() {
